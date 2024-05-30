@@ -1,92 +1,88 @@
-<h1>Honeypot and SIEM in Azure</h1>
+<h1>VM Honeypot and SIEM in Azure</h1>
 
 <h2>Objective</h2>
 Developed a custom-based SIEM using Microsoft Azure Sentinel. SIEM (Security Information and Event Management) helps organizations detect, analyze, and respond to security threats.
 
 <br />
 
+<h2>Project Overview:</h2>
+
+1. **Setting Up a Honeypot:** I created a Windows 11 virtual machine (VM) in Azure to act as our honeypot.
+2. **Logging Events**: I configured Azure Log Analytics to store logs from our honeypot.
+3. **PowerShell Scripting:** I extracted relevant events from the VM using a PowerShell script and a third-party API.
+4. **Azure Sentinel Configuration**: Finally, I used Azure Sentinel to visualize the attacks on our honeypot.
 
 <h2>Project Walk-Through:</h2>
 
+<h3>Creating a Virtual Machine</h3>
 
-<h3>Step 1: Added Network Devices to the Workspace</h3>
+1. I went to the Azure Portal and searched for "Virtual machines".
 
-I began by adding essential network devices to the Logical Workspace. This included a PC, a laptop, and a cable modem. The cable modem was connected to the Internet Service Provider (ISP) via a coaxial cable and to the local network through an Ethernet cable. The devices were added using the Device-Type Selection Box:
-- **PC:** End Devices > End Devices > PC
-- **Laptop:** End Devices > End Devices > Laptop
-- **Cable Modem:** Network Devices > WAN Emulation > Cable Modem
+2. I clicked “Create” and select “Azure virtual machine”.
+
+3. I filled in the details:
+- **Subscription:** Azure Subscription 1
+- **Resource Group:** Created a new one named Honeypot_group
+- **Virtual Machine name**: Chose a name of my liking
+- **Region:** (US) West US 3
+- **Image:** Windows 11 Pro
+- **Size:** Standard size
+- **Administrator account:** Created and saved the credentials
+
+4. I clicked “Review + Create” and waited for Azure to deploy the VM.
+
+5. Once the VM was created, I changed the firewall rules to allow all incoming traffic:
+- Went to the VM's dashboard, then to “Networking” > “Add Inbound port Rule”.
+- Added the necessary configurations to allow all traffic.
+
  <br/>
 <img src="https://imgur.com/fHKCjfm.png" height="80%" width="80%" alt="Building Home Network Steps"/>
 <br />
 
-<h3>Step 2: Changed Display Names of the Network Devices</h3>
+<h3>Setting Up Log Analytics Workspace</h3>
 
-Next, I changed the display names of the network devices for clarity:
-- Clicked on each device icon in the Logical Workspace.
-- Selected the Config tab in the device configuration window.
-- Updated the Display Name field to "Shahin PC," "Laptop," and "Cable Modem."
+1. I searched for “Log Analytics Workspace” in the Azure Portal and clicked “Create”.
+2. I filled in the details and created the workspace.
+3. I configured the workspace to log events from the VM:
+- Went to “Microsoft Defender for Cloud” > “Environment Settings” > “Log-Honeypot”.
+- Turned on the Server plan in “Defender Plan”.
+- In “Data Collection”, select “All Events”.
   
 <br/>
 
 <img src="https://imgur.com/dCmvCkb.png" height="80%" width="80%" alt="Building Home Network Steps"/>
 <br />
 
-<h3>Step 3: Added Physical Cabling Between Devices</h3>
+<h3>PowerShell for Custom Events</h3>
 
-I added the necessary physical cabling between the devices:
-- **PC to Wireless Router:** Used a copper straight-through cable to connect the FastEthernet0 interface of the PC to the Ethernet 1 interface of the wireless router.
-- **Wireless Router to Cable Modem:** Connected using a copper straight-through cable between the internet interface of the wireless router and the Port 1 interface of the cable modem.
-- **Cable Modem to Internet Cloud:** Connected the Port 0 interface of the cable modem to the Coaxial 7 interface of the Internet cloud using a coaxial cable.
+1. I connected to the VM using Remote Desktop Protocol (RDP):
+- I searched for Remote Desktop in Windows and connected using the VM’s public IP and my credentials.
+2. I disabled the firewall inside the VM:
+- Went to Start > Windows Defender Firewall properties and turned off all profiles.
+3. I used a PowerShell script to capture specific events:
+- Signed up for an API key at ipgeolocation.io.
+- Used the provided PowerShell script from GitHub, inserted my API key, and ran the script.
+- The script logged failed login attempts (event ID 4625) to **C:\Program\failed_rdp.log**.
  
 <br/>
 
 <img src="https://imgur.com/Ut9GYmf.png" height="80%" width="80%" alt="Building Home Network Steps"/>
 
 <br />
-<br />
-<h2>Part 2</h2>
 
-<h3>Step 1: Configured the PC</h3>
+<h3>Azure Sentinel Configuration</h3>
 
-I configured the PC for the wired network connection:
-- Clicked on the PC and navigated to the Desktop tab.
-- Verified that DHCP was enabled under IP Configuration, ensuring the PC received an IP address.
+1. I created Custom Logs in Log Analytics:
+- Went to Log Analytics Workspace, selected my workspace, then Tables > Create (New Custom log MMA-based).
+- Uploaded a sample **failed_rdp.log** file.
+- Specified the collection path (**C:\ProgramData\failed_rdp.log**).
+- Named the custom log and created it.
+2. I visualized logs in Azure Sentinel:
+- I went to Sentinel on the Azure Portal.
+- Added my Log Analytics Workspace to Sentinel.
+- Created a new workbook in Sentinel and added a query to filter and visualize the data.
+- I visualized the data on a map in Sentinel by configuring the workbook settings.
  
-<img src="https://imgur.com/EqNcLiG.png" height="80%" width="80%" alt="Building Home Network Steps"/>
-
-- Opened the Command Prompt and entered **ipconfig /all** to check the IPv4 addressing information, confirming the PC received an IPv4 address in the 192.168.0.x range.
-
-<img src="https://imgur.com/m6LCMv5.png" height="80%" width="80%" alt="Building Home Network Steps"/>
-
-- Tested connectivity to **cisco.srv** by issuing the **ping cisco.srv** command, receiving four replies to confirm successful connectivity.
-
-<img src="https://imgur.com/Vr3qEjX.png" height="80%" width="80%" alt="Building Home Network Steps"/>
-
-<br />
-
-<h3>Step 2: Configured the Laptop</h3>
-
-Configured the laptop to access the wireless network:
-- Clicked on the Laptop and selected the Physical tab.
-- I powered off the laptop, removed the Ethernet copper module, and replaced it with the Wireless WPC300N module.
-  <br/>
-  
-<img src="https://imgur.com/evL9UhG.png" height="80%" width="80%" alt="Building Home Network Steps"/>
-
-- I powered the laptop back on and navigated to the Desktop tab.
-
-<img src="https://imgur.com/e9D9mMy.png" height="60%" width="60%" alt="Building Home Network Steps"/>
-
-- Connected to the wireless network by selecting PC Wireless, navigating to the Connect tab, and connecting to the "HomeNetwork."
-
-<img src="https://imgur.com/XJjQcbO.png" height="60%" width="60%" alt="Building Home Network Steps"/>
-
-- Verified connectivity by opening the Web Browser and navigating to cisco.srv.
-
-<img src="https://imgur.com/wFbw7yi.png" height="60%" width="60%" alt="Building Home Network Steps"/>
-
-This project showcased my ability to build and configure a simple network using Packet Tracer, demonstrating my proficiency in deploying network devices, managing physical connections, and ensuring proper device configurations to establish network connectivity.
-
 <img src="https://imgur.com/JRgqAyq.png" height="80%" width="80%" alt="Building Home Network Steps"/>
 <br />
 <br />
