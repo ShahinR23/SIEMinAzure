@@ -68,7 +68,7 @@ Developed a custom-based SIEM using Microsoft Azure Sentinel. SIEM (Security Inf
 
 <img src="https://imgur.com/w6fJJSZ.png" height="60%" width="60%" alt="Building SIEM"/>
   
-- Used the provided PowerShell script from GitHub, inserted my API key, and ran the script.
+- Used the provided PowerShell script from [GitHub](https://github.com/joshmadakor1/Sentinel-Lab/blob/main/Custom_Security_Log_Exporter.ps1), inserted my API key, and ran the script.
 - The script logged failed login attempts (event ID 4625) to **C:\Program\failed_rdp.log**.
 
   <img src="https://imgur.com/uLDe6XF.png" height="80%" width="80%" alt="Building SIEM"/>
