@@ -31,12 +31,16 @@ Developed a custom-based SIEM using Microsoft Azure Sentinel. SIEM (Security Inf
 
 4. I clicked “Review + Create” and waited for Azure to deploy the VM.
 
+<img src="https://imgur.com/siX5z6G.png" height="80%" width="80%" alt="Building Home Network Steps"/>
+
 5. Once the VM was created, I changed the firewall rules to allow all incoming traffic:
 - Went to the VM's dashboard, then to “Networking” > “Add Inbound port Rule”.
 - Added the necessary configurations to allow all traffic.
 
- <br/>
-<img src="https://imgur.com/fHKCjfm.png" height="80%" width="80%" alt="Building Home Network Steps"/>
+<img src="https://imgur.com/9hbMUDW.png" height="80%" width="80%" alt="Building Home Network Steps"/>
+
+<img src="https://imgur.com/Po9h9zN.png" height="80%" width="80%" alt="Building Home Network Steps"/>
+
 <br />
 
 <h3>Setting Up Log Analytics Workspace</h3>
