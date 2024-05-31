@@ -1,4 +1,4 @@
-<h1>VM Honeypot and SIEM in Azure</h1>
+<h1>Azure Sentinel (SIEM) with a live VM honey pot</h1>
 
 <h2>Objective</h2>
 Developed a custom-based SIEM using Microsoft Azure Sentinel. SIEM (Security Information and Event Management) helps organizations detect, analyze, and respond to security threats.
